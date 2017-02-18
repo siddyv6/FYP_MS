@@ -1,4 +1,4 @@
-package com.Test_SMS.controller;
+package com.Test_SMS.service;
 /**
  * Created by Siddharth Varjivan on 21/01/2017.
  */

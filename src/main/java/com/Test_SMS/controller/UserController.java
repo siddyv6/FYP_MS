@@ -1,7 +1,8 @@
 package com.Test_SMS.controller;
 
-import com.Test_SMS.model.JWTResponse;
-import com.Test_SMS.service.SecretService;
+import com.Test_SMS.Security.Model.JWTResponse;
+import com.Test_SMS.Security.Service.SecretService;
+import com.Test_SMS.service.TextAlertServiceImpl;
 import com.messagebird.objects.MessageResponse;
 import com.Test_SMS.model.Recipients;
 import io.jsonwebtoken.Claims;

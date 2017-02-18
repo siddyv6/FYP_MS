@@ -1,10 +1,9 @@
-package com.Test_SMS.controller;
+package com.Test_SMS.Security.Controller;
 
 import com.Test_SMS.exceptions.UnauthorizedException;
-import com.Test_SMS.model.JWTResponse;
-import com.Test_SMS.service.SecretService;
+import com.Test_SMS.Security.Model.JWTResponse;
+import com.Test_SMS.Security.Service.SecretService;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

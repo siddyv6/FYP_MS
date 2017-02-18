@@ -1,6 +1,6 @@
 package com.Test_SMS.model;
 
-import com.Test_SMS.model.Recipients;
+import com.Test_SMS.Security.Model.BaseResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 

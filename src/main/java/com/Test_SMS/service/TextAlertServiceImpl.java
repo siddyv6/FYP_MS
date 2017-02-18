@@ -1,4 +1,4 @@
-package com.Test_SMS.controller;
+package com.Test_SMS.service;
 import com.messagebird.MessageBirdServiceImpl;
 import com.messagebird.MessageBirdService;
 import com.messagebird.MessageBirdClient;

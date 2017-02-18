@@ -1,10 +1,10 @@
-package com.Test_SMS.controller;
+package com.Test_SMS.Security.Controller;
 
-import com.Test_SMS.model.JWTResponse;
-import com.Test_SMS.model.PublicCreds;
+import com.Test_SMS.Security.Model.JWTResponse;
+import com.Test_SMS.Security.Model.PublicCreds;
 import com.Test_SMS.model.Recipients;
 import com.Test_SMS.model.RequestWrapper;
-import com.Test_SMS.service.SecretService;
+import com.Test_SMS.Security.Service.SecretService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
