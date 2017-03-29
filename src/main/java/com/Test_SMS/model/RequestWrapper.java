@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Siddharth Varjivan on 07/02/2017.
  */
 public class RequestWrapper extends BaseResponse {
-    private   List<Recipients> recipientsList;
+    private List<Recipients> recipientsList;
     private Jws<Claims> jwsClaims;
     private String jwt;
     private Status status;

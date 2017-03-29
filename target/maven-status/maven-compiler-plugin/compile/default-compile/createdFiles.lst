@@ -1,0 +1,17 @@
+com\Test_SMS\controller\UserController$OriginalExceptionFromAnotherApi.class
+com\Test_SMS\controller\UserController.class
+com\Test_SMS\Security\Model\PublicCreds.class
+com\Test_SMS\model\RequestWrapper.class
+com\Test_SMS\Security\Model\JWTResponse.class
+com\Test_SMS\Security\Service\SecretService$1.class
+com\Test_SMS\Security\Model\BaseResponse$Status.class
+com\Test_SMS\Security\Model\BaseResponse.class
+com\Test_SMS\UserServiceApplication.class
+com\Test_SMS\model\Recipients.class
+com\Test_SMS\Security\Service\SecretService.class
+com\Test_SMS\Security\Controller\SecretServiceController.class
+com\Test_SMS\service\TextAlertServiceImpl.class
+com\Test_SMS\controller\UserController$ErrorResponse.class
+com\Test_SMS\exceptions\UnauthorizedException.class
+com\Test_SMS\Security\Controller\BaseController.class
+com\Test_SMS\service\TextAlertService.class

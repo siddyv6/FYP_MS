@@ -1,8 +1,8 @@
 package com.Test_SMS.Security.Controller;
 
-import com.Test_SMS.exceptions.UnauthorizedException;
 import com.Test_SMS.Security.Model.JWTResponse;
 import com.Test_SMS.Security.Service.SecretService;
+import com.Test_SMS.exceptions.UnauthorizedException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,26 +24,26 @@ public class BaseController {
         );
 */
         Date now = new Date();
-        Date exp = new Date(now.getTime() + (1000*60)); // 60 seconds
+        Date exp = new Date(now.getTime() + (1000 * 60)); // 60 seconds
 
-        String jwt =  Jwts.builder()
-            .setHeaderParam("kid", secretService.getMyPublicCreds().getKid())
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setNotBefore(now)
-            .setExpiration(exp)
-            .signWith(
-                SignatureAlgorithm.RS256,
-                secretService.getMyPrivateKey()
-            )
-            .compact();
+        String jwt = Jwts.builder()
+                .setHeaderParam("kid", secretService.getMyPublicCreds().getKid())
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setNotBefore(now)
+                .setExpiration(exp)
+                .signWith(
+                        SignatureAlgorithm.RS256,
+                        secretService.getMyPrivateKey()
+                )
+                .compact();
 
         return jwt;
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-        SignatureException.class, MalformedJwtException.class, JwtException.class, IllegalArgumentException.class
+            SignatureException.class, MalformedJwtException.class, JwtException.class, IllegalArgumentException.class
     })
     public JWTResponse badRequest(Exception e) {
         return processException(e);
