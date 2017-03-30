@@ -46,24 +46,28 @@ public class SecretServiceController extends BaseController {
         // just to prove that the key was successfully added
         return secretService.getPublicCreds(publicCreds.getKid());
     }
+//build operation uses the microservice’s auto-generated private key to sign the JWT
+    //JWT with some hard-coded custom and registered claims
 
     @RequestMapping("/test-build")
     public JWTResponse testBuild() {
         String jws = Jwts.builder()
-                .setHeaderParam("kid", secretService.getMyPublicCreds().getKid())
+                .setHeaderParam("kid", secretService.getMyPublicCreds().getKid())//public key id public key is stored in a Map identified by the unique kid
                 .setIssuer("Test")
                 .setSubject("Test ")
                 .claim("id", "Test Sid User")
                 .claim("Reciepents", true)
                 .setIssuedAt(Date.from(Instant.ofEpochSecond(1466796822L)))   //
                 .setExpiration(Date.from(Instant.ofEpochSecond(4622470422L))) //
-                .signWith(
+                .signWith( //microservice’s private key with RS266 Encryption
                         SignatureAlgorithm.RS256,
                         secretService.getMyPrivateKey()
                 )
                 .compact();
         return new JWTResponse(jws);
     }
+//parse operation uses the matching public key to verify the signature.
+
 
     @RequestMapping(value = "/test-parse")
     public RequestWrapper testParse(@RequestHeader(value = "Authorization") String Test,

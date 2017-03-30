@@ -32,7 +32,7 @@ public class UserController {
         return alertService.TestSendingSMS(id);
     }
 
-
+//Contains Test Mappings or Request methods used to test code
     @RequestMapping(value = "{id}/body", method = RequestMethod.GET)
     public MessageResponse sendNumbers(@PathVariable("id") String id,
                                        @RequestParam(value = "test", required = false) String test,
@@ -67,7 +67,7 @@ public class UserController {
 
     @RequestMapping(value = "/tess", method = RequestMethod.POST)
     public ResponseEntity<List<Recipients>> update(@RequestBody List<Recipients> car) {
-
+//Java 8 Lamda methods used foreach to parse through JSON
         car.stream().forEach(c -> c.setBody(c.getBody() + "Testing"));
         car.stream().forEach(c -> {
             try {
@@ -83,7 +83,7 @@ public class UserController {
         // TODO: call persistence layer to update
         return new ResponseEntity<List<Recipients>>(car, HttpStatus.OK);
     }
-
+//Test Build to tet json parsing
     @RequestMapping(value = "/test-building")
     public RequestWrapper testPars(@RequestHeader(value = "Authorization") String Test,
                                                       @RequestBody List<Recipients> car) {
@@ -135,8 +135,9 @@ public class UserController {
         return new JWTResponse(jwsClaims);
     }
 
+///https://stackoverflow.com/questions/21923857/how-to-pass-list-parameters-for-each-object-using-spring-mvc?rq=1
 
-
+    //https://stackoverflow.com/questions/21923663/how-to-have-multiple-parameters-using-spring-mvc-requestmapping
     /**
      * Error case, returns ErrorResponse which Spring automatically converts to JSON (using Jackson)
      * Content type will be application/json

@@ -31,7 +31,9 @@ public class SecretService {
     public void setup() {
         refreshMyCreds();
     }
+//microservice creates a key-pair for itself
 
+    //https://github.com/jwtk/jjwt
     private SigningKeyResolver signingKeyResolver = new SigningKeyResolverAdapter() {
         @Override
         public Key resolveSigningKey(JwsHeader header, Claims claims) {
@@ -62,7 +64,7 @@ public class SecretService {
     private PublicCreds createPublicCreds(String kid, PublicKey key) {
         return new PublicCreds(kid, TextCodec.BASE64URL.encode(key.getEncoded()));
     }
-
+//https://www.leveluplunch.com/java/tutorials/014-post-json-to-spring-rest-webservice/
     // do not expose in controllers
     public PrivateKey getMyPrivateKey() {
         return myKeyPair.getPrivate();
