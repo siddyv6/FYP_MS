@@ -1,4 +1,4 @@
-package com.Test_SMS.Security.Model;
+package com.Test_SMS.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,11 +1,9 @@
-package com.Test_SMS.Security.Controller;
+package com.Test_SMS.controller;
 
-import com.Test_SMS.Security.Model.JWTResponse;
-import com.Test_SMS.Security.Model.PublicCreds;
-import com.Test_SMS.Security.Service.SecretService;
-import com.Test_SMS.controller.UserController;
+import com.Test_SMS.model.JWTResponse;
+import com.Test_SMS.model.PublicCreds;
+import com.Test_SMS.service.EndPointService;
 import com.Test_SMS.model.Recipients;
-import com.Test_SMS.model.RequestWrapper;
 import com.Test_SMS.service.TextAlertServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -13,55 +11,51 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import static com.sun.deploy.trace.Trace.print;
 
 @RestController
-public class SecretServiceController extends BaseController {
+public class EndPointServiceController {
 
     @Autowired
-    SecretService secretService;
+    EndPointService endPointService;
     @Autowired
     TextAlertServiceImpl alertService;
 
 
-    @RequestMapping("/refresh-my-creds")
-    public PublicCreds refreshMyCreds() {
-        return secretService.refreshMyCreds();
+    @RequestMapping("/rMyCreds")
+    public PublicCreds rMyCreds() {
+        return endPointService.refreshMyCreds();
     }
 
     @RequestMapping("/get-my-public-creds")
-    public PublicCreds getMyPublicCreds() {
-        return secretService.getMyPublicCreds();
+    public PublicCreds getMyPCreds() {
+        return endPointService.getMyPublicCreds();
     }
 
     @RequestMapping("/add-public-creds")
     public PublicCreds addPublicCreds(@RequestBody PublicCreds publicCreds) {
-        secretService.addPublicCreds(publicCreds);
+        endPointService.addPublicCreds(publicCreds);
         // just to prove that the key was successfully added
-        return secretService.getPublicCreds(publicCreds.getKid());
+        return endPointService.getPublicCreds(publicCreds.getKid());
     }
 //build operation uses the microservice’s auto-generated private key to sign the JWT
     //JWT with some hard-coded custom and registered claims
 
-    @RequestMapping("/test-build")
-    public JWTResponse testBuild() {
+    @RequestMapping("/buildTestJWT")//tb
+    public JWTResponse buildTestJWT() {
         String jws = Jwts.builder()
-                .setHeaderParam("kid", secretService.getMyPublicCreds().getKid())//public key id public key is stored in a Map identified by the unique kid
-                .setIssuer("Test")
+                .setHeaderParam("kid", endPointService.getMyPublicCreds().getKid())//public key id public key is stored in a Map identified by the unique kid
                 .setSubject("Test ")
                 .claim("id", "Test Sid User")
                 .claim("Reciepents", true)
-                .setIssuedAt(Date.from(Instant.ofEpochSecond(1466796822L)))   //
-                .setExpiration(Date.from(Instant.ofEpochSecond(4622470422L))) //
                 .signWith( //microservice’s private key with RS266 Encryption
                         SignatureAlgorithm.RS256,
-                        secretService.getMyPrivateKey()
+                        endPointService.getMyPrivateKey()
                 )
                 .compact();
         return new JWTResponse(jws);
@@ -69,12 +63,12 @@ public class SecretServiceController extends BaseController {
 //parse operation uses the matching public key to verify the signature.
 
 
-    @RequestMapping(value = "/test-parse")
-    public RequestWrapper testParse(@RequestHeader(value = "Authorization") String Test,
-                                    @RequestBody List<Recipients> car) {
+    @RequestMapping(value = "/test-jwt")
+    public ResponseEntity testJWT(@RequestHeader(value = "Authorization") String Test,
+                                  @RequestBody List<Recipients> car) {
 
         Jws<Claims> jwsClaims = Jwts.parser()
-                .setSigningKeyResolver(secretService.getSigningKeyResolver())
+                .setSigningKeyResolver(endPointService.getSigningKeyResolver())
                 .parseClaimsJws(Test);
       /*  car.stream().forEach((Recipients c) -> {
 
@@ -99,11 +93,9 @@ public class SecretServiceController extends BaseController {
             }
         });
 
-        RequestWrapper media = new RequestWrapper(jwsClaims);
-        media.setRecipientsList(car);
 
         //RequestWrapper requestWrapper = new RequestWrapper(jwsClaims);
-        return media;
+        return new ResponseEntity<>(car, HttpStatus.OK);
     }
 
 }

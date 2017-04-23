@@ -1,6 +1,6 @@
-package com.Test_SMS.Security.Service;
+package com.Test_SMS.service;
 
-import com.Test_SMS.Security.Model.PublicCreds;
+import com.Test_SMS.model.PublicCreds;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.TextCodec;
 import io.jsonwebtoken.impl.crypto.RsaProvider;
@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class SecretService {
+public class EndPointService {
 
-    private static final Logger log = LoggerFactory.getLogger(SecretService.class);
+    private static final Logger log = LoggerFactory.getLogger(EndPointService.class);
 
-    private KeyPair myKeyPair;
+    private KeyPair myKeyPair;//Public and Private Key.
     private String kid;
 
     private Map<String, PublicKey> publicKeys = new HashMap<>();
@@ -39,11 +39,11 @@ public class SecretService {
         public Key resolveSigningKey(JwsHeader header, Claims claims) {
             String kid = header.getKeyId();
             if (!Strings.hasText(kid)) {
-                throw new JwtException("Missing required 'kid' header param in JWT with claims: " + claims);
+                throw new JwtException("Missing 'kid':" + claims);
             }
             Key key = publicKeys.get(kid);
             if (key == null) {
-                throw new JwtException("No public key registered for kid: " + kid + ". JWT claims: " + claims);
+                throw new JwtException("No public key for kid: " + kid + ". JWT claims: " + claims);
             }
             return key;
         }
@@ -65,15 +65,15 @@ public class SecretService {
         return new PublicCreds(kid, TextCodec.BASE64URL.encode(key.getEncoded()));
     }
 //https://www.leveluplunch.com/java/tutorials/014-post-json-to-spring-rest-webservice/
-    // do not expose in controllers
     public PrivateKey getMyPrivateKey() {
         return myKeyPair.getPrivate();
     }
 
     public PublicCreds refreshMyCreds() {
-        myKeyPair = RsaProvider.generateKeyPair(1024);
-        kid = UUID.randomUUID().toString();
+        myKeyPair = RsaProvider.generateKeyPair(1024); //KeyPairGenerator class is used to generate pairs of public and private keys. Key pair generators are constructed using the getInstance factory methods (static methods that return instances of a given class).
 
+        kid = UUID.randomUUID().toString();
+        //generate unique sequences of bytes
         PublicCreds publicCreds = getMyPublicCreds();
 
         // this microservice will trust itself

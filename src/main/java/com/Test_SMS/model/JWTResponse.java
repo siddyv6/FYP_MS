@@ -1,11 +1,11 @@
-package com.Test_SMS.Security.Model;
+package com.Test_SMS.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JWTResponse extends BaseResponse {
+public class JWTResponse {
     private String exceptionType;
     private String jwt;
     private Jws<Claims> jwsClaims;
@@ -14,12 +14,10 @@ public class JWTResponse extends BaseResponse {
 
     public JWTResponse(String jwt) {
         this.jwt = jwt;
-        setStatus(Status.SUCCESS);
     }
 
     public JWTResponse(Jws<Claims> jwsClaims) {
         this.jwsClaims = jwsClaims;
-        setStatus(Status.SUCCESS);
     }
 
     public String getExceptionType() {

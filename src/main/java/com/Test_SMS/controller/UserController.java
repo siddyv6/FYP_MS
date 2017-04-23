@@ -1,18 +1,15 @@
 package com.Test_SMS.controller;
 
-import com.Test_SMS.Security.Model.JWTResponse;
-import com.Test_SMS.Security.Service.SecretService;
+import com.Test_SMS.model.JWTResponse;
+import com.Test_SMS.service.EndPointService;
 import com.Test_SMS.model.Recipients;
-import com.Test_SMS.model.RequestWrapper;
 import com.Test_SMS.service.TextAlertServiceImpl;
-import com.messagebird.objects.MessageResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -25,7 +22,7 @@ public class UserController {
     @Autowired
     TextAlertServiceImpl alertService;
     @Autowired
-    SecretService secretService;
+    EndPointService endPointService;
 
     @RequestMapping("/user")
     public List<BigInteger> getUser(@RequestParam(value = "id", defaultValue = "1") String id) {
@@ -33,24 +30,15 @@ public class UserController {
     }
 
 //Contains Test Mappings or Request methods used to test code
-    @RequestMapping(value = "{id}/body", method = RequestMethod.GET)
-    public MessageResponse sendNumbers(@PathVariable("id") String id,
-                                       @RequestParam(value = "test", required = false) String test,
-                                       Model map) {
-        map.addAttribute("msg" +
-                id + ", " + test);
-        try {
-            //return map.toString();
-            return alertService.sendSms(id, test);
-        } catch (Exception e) {
-            if (e.getCause() != null) {
-                System.out.println(e.getMessage());
-            }
-            e.printStackTrace();
-            //return e.getMessage();
-        }
-        // just to prove that the key was successfully added
-        return null;
+    @RequestMapping(value = "/{id}/body", method = RequestMethod.GET)
+    public ResponseEntity sendNumbers(@PathVariable("id") String id,
+                                       @RequestParam(value = "test", required = false) String S, Recipients car) {
+       car.setBody(S + "Testing");
+
+
+
+        // TODO: call persistence layer to update
+        return new ResponseEntity<>(car, HttpStatus.OK);
     }
 
   /*  @RequestMapping(value = "/")
@@ -67,7 +55,7 @@ public class UserController {
 
     @RequestMapping(value = "/tess", method = RequestMethod.POST)
     public ResponseEntity<List<Recipients>> update(@RequestBody List<Recipients> car) {
-//Java 8 Lamda methods used foreach to parse through JSON
+//Java 8 Foreach used to loop and parse through JSON
         car.stream().forEach(c -> c.setBody(c.getBody() + "Testing"));
         car.stream().forEach(c -> {
             try {
@@ -81,19 +69,17 @@ public class UserController {
 
 
         // TODO: call persistence layer to update
-        return new ResponseEntity<List<Recipients>>(car, HttpStatus.OK);
+        return new ResponseEntity<>(car, HttpStatus.OK);
     }
 //Test Build to tet json parsing
     @RequestMapping(value = "/test-building")
-    public RequestWrapper testPars(@RequestHeader(value = "Authorization") String Test,
+    public ResponseEntity testPars(@RequestHeader(value = "Authorization") String Test,
                                                       @RequestBody List<Recipients> car) {
         Jws<Claims> jwsClaims = Jwts.parser()
-                .setSigningKeyResolver(secretService.getSigningKeyResolver())
+                .setSigningKeyResolver(endPointService.getSigningKeyResolver())
                 .parseClaimsJws(Test);
 
         car.stream().forEach(c -> c.setBody(c.getBody() + "Testing"));
-        RequestWrapper media = new RequestWrapper(jwsClaims);
-        media.setRecipientsList(car);
 
         //RequestWrapper requestWrapper = new RequestWrapper(jwsClaims);
 
@@ -108,13 +94,12 @@ public class UserController {
             }
         });
 
+        return new ResponseEntity<>(car, HttpStatus.OK);
 
-        // TODO: call persistence layer to update
-        return media;
     }
 
     @RequestMapping(value = "/test-s")
-    public JWTResponse testParse(@RequestHeader(value = "Authorization") String Test,
+    public JWTResponse testAuth(@RequestHeader(value = "Authorization") String Test,
                                  @RequestBody List<Recipients> car) {
 
         car.stream().forEach(c -> System.out.println(c.getBody() + "Testing"));
@@ -129,7 +114,7 @@ public class UserController {
         });
 
         Jws<Claims> jwsClaims = Jwts.parser()
-                .setSigningKeyResolver(secretService.getSigningKeyResolver())
+                .setSigningKeyResolver(endPointService.getSigningKeyResolver())
                 .parseClaimsJws(Test);
 
         return new JWTResponse(jwsClaims);
